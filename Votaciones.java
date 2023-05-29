@@ -1,82 +1,78 @@
-/**
- *
- * @author Gerson Sec
- */
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Votaciones {
     public static void main(String[] args) {
-        Map<String, Integer> candidatos = new HashMap<>();
-        Scanner scanner = new Scanner(System.in);
+        // Creamos un HashMap .
+        Map<String, Map<String, Map<String, Map<String, Integer>>>> resultados = new HashMap<>();
 
-        // Agregar candidatos
-        candidatos.put("Sandra Torres", 0);
-        candidatos.put("Isaac Farchi", 0);
-        candidatos.put("Zury Rios", 0);
-        candidatos.put("Carlos Pineda", 0);
-        candidatos.put("Geovany Reyes", 0);
+        // El ultmo valor es el unico que se presentara en la terminal
+        registrarVotos(resultados, "Sacatepequez", "Antigua Guatemala",   "Mesa1", "Geovany Reyes", 10);
+        registrarVotos(resultados, "Sacatepequez", "Antigua Guatemala",   "Mesa2", "Zury Rios",     50);
+        registrarVotos(resultados, "Sacatepequez", "Antigua Guatemala",   "Mesa2", "Geovany Reyes", 80);
+        registrarVotos(resultados, "Sacatepequez", "Antigua Guatemala",   "Mesa2", "Zury Rios",     10);
+        registrarVotos(resultados, "Sacatepequez", "Sumpango",            "Mesa1", "Geovany Reyes", 60);
+        registrarVotos(resultados, "Sacatepequez", "Sumpango",            "Mesa1", "Zury Rios",     220);
+        registrarVotos(resultados, "Sacatepequez", "Sumpango",            "Mesa2", "Geovany Reyes", 90);
+        registrarVotos(resultados, "Guatemala",    "Sta Catarina Pinula", "Mesa1", "Geovany Reyes", 200);
+        registrarVotos(resultados, "Guatemala",    "Sta Catarina Pinula", "Mesa1", "Zury Rios",     600);
 
-        int totalVotos = 0;
-        boolean votacionActiva = true;
+        mostrarResultados(resultados);
+    }
 
-        while (votacionActiva) {
-            System.out.println("Ingresa el número del candidato al que deseas votar:");
-            System.out.println("1 - Sandra Torres");
-            System.out.println("2 - Isaac Farchi");
-            System.out.println("3 - Zury Rios");
-            System.out.println("4 - Carlos Pineda");
-            System.out.println("5 - Geovany Reyes");
-            System.out.println("0 - Finalizar votación");
+     // El metodo que utilizamos
+    public static void registrarVotos(Map<String, Map<String, Map<String, Map<String, Integer>>>> resultados, String departamento,
+            String municipio, String mesa, String candidato, int votos) {
+        if (!resultados.containsKey(departamento)) {
+            resultados.put(departamento, new HashMap<>());
+        }
 
+        // Aca empezamos a mapear
+        Map<String, Map<String, Map<String, Integer>>> municipios = resultados.get(departamento);
 
-            int opcion = scanner.nextInt();
+        if (!municipios.containsKey(municipio)) {
+            municipios.put(municipio, new HashMap<>());
+        }
 
-            switch (opcion) {
-                case 1:
-                    candidatos.put("Sandra Torres", candidatos.get("Sandra Torres") + 1);
-                    totalVotos++;
-                    break;
-                case 2:
-                    candidatos.put("Isaac Farchi", candidatos.get("Isaac Farchi") + 1);
-                    totalVotos++;
-                    break;
-                case 3:
-                    candidatos.put("Zury Rios", candidatos.get("Zury Rios") + 1);
-                    totalVotos++;
-                    break;
-                case 4:
-                    candidatos.put("Carlos Pineda", candidatos.get("Carlos Pineda") + 1);
-                    totalVotos++;
-                    break;
-                case 5:
-                    candidatos.put("Geovany Reyes", candidatos.get("Geovany Reyes") + 1);
-                    totalVotos++;
-                    break;
-                case 0:
-                    votacionActiva = false;
-                    break;
-                default:
-                    System.out.println("Opción inválida. Por favor, elige nuevamente.");
-                    break;
+        Map<String, Map<String, Integer>> mesas = municipios.get(municipio);
+        if (!mesas.containsKey(mesa)) {
+            mesas.put(mesa, new HashMap<>());
+        }
 
-                    
+        Map<String, Integer> candidatos = mesas.get(mesa);
+        if (candidatos.containsKey(candidato)) {
+            int votosAnteriores = candidatos.get(candidato);
+            candidatos.put(candidato, votosAnteriores + votos);
 
+        } else {
+            candidatos.put(candidato, votos);
+        }
+    }
+
+    public static void mostrarResultados(Map<String, Map<String, Map<String, Map<String, Integer>>>> resultados) {
+        for (String departamento : resultados.keySet()) {
+            System.out.println("Departamento: " + departamento);
+
+            Map<String, Map<String, Map<String, Integer>>> municipios = resultados.get(departamento);
+
+            for (String municipio : municipios.keySet()) {
+                System.out.println("  Municipio: " + municipio);
+
+                Map<String, Map<String, Integer>> mesas = municipios.get(municipio);
+
+                for (String mesa : mesas.keySet()) {
+                    System.out.println("    Mesa: " + mesa);
+
+                    Map<String, Integer> candidatos = mesas.get(mesa);
+
+                    for (String candidato : candidatos.keySet()) {
+                        int votos = candidatos.get(candidato);
+                        System.out.println("      Candidato: " + candidato + " - Votos: " + votos);
+                    }
+                }
             }
-        }
 
-        // Mostrar resultados
-        System.out.println("Resultados de la votación:");
-        for (Map.Entry<String, Integer> candidato : candidatos.entrySet()) {
-            String nombreCandidato = candidato.getKey();
-            int votosCandidato = candidato.getValue();
-            double porcentajeVotos = (double) votosCandidato / totalVotos * 100;
-            System.out.println(nombreCandidato + ": " + votosCandidato + " votos (" + porcentajeVotos + "%)");
+            System.out.println();
         }
-        System.out.println("Total de votos: " + totalVotos);
-        scanner.close();
-
-   
     }
 }
