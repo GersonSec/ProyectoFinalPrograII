@@ -1,31 +1,22 @@
+
 package com.proyectofinal.api_candidatos.modelos;
 
-public class Cliente implements Serializable{
-    private static final long serialVeresionUID = 1l;
+import java.io.Serializable;
+
+public class Cliente implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     private long id;
-    
     private String nombre;
-
     private String apellido;
-
     private String email;
 
-    public Cliente()
-
-
-    {
-
-    public st getAtic() {
-        return atic;
+    public Cliente() {
+        // Constructor por defecto
     }
 
-    public void setAtic(st atic) {
-        this.atic = atic;
-    }
-
-    public long getSerialVeresionUID() {
-        return serialVeresionUID;
+    public long getId() {
+        return id;
     }
 
     public void setId(long id) {
@@ -55,11 +46,4 @@ public class Cliente implements Serializable{
     public void setEmail(String email) {
         this.email = email;
     }
-
-    
-        
-    }
-
-        
-    
 }
